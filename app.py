@@ -57,15 +57,14 @@ def welcome():
     """List all available api routes."""
     return (
         f"Available Routes:<br/>"
-        f"/songs<br/>"
+        f"/extract<br/>"
+        f"/songs"
     )
 
-@app.route("/songs")
-def songs():
+@app.route("/extract")
+def extract():
     # Create our session (link) from Python to the DB
     session = Session(engine)
-
-    """Return a list of passenger data including the name, age, and sex of each passenger"""
     
     results = session.query(SpotifySongs).all()
 
@@ -105,8 +104,21 @@ def songs():
     with open('static/spotify_songs.json', 'w') as file2:
         json.dump(all_songs, file2)
 
-    #return jsonify(all_songs)
     return render_template('index.html')
+
+@app.route("/songs")
+def songs():
+
+    session = Session(engine)
     
+    results = session.query(SpotifySongs).limit(3000).all()
+
+    session.close()
+
+    all_songs = [{"TRACK": song.track_name, "ARTIST": song.artist, "LENGTH": song.duration_minutes_seconds}
+    for song in results]
+
+    return jsonify(all_songs)
+
 if __name__ == '__main__':
     app.run(debug=True)
