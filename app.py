@@ -61,6 +61,10 @@ def welcome():
 def pie():
     return render_template("pie.html")
 
+@app.route("/bar")
+def bar():
+    return render_template("bar_chart.html")
+
 @app.route("/songs_extract") # remove as route maybe?
 def extract():
     # Create our session (link) from Python to the DB
