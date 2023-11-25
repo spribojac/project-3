@@ -3,10 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project_3</title>
-    <link rel="stylesheet" href="static/css/main.css">
+    <title>Interactive Music Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="static/css/main.css">
+    <link rel="shortcut icon" href="#"> <!--- for the favicon error?-->
 </head>
 <body>
-    <h1>Thanks for the JSON.dump!</h1>
+
+    <div class="welcome-background">
+        <div class="container">
+            <h1>Interactive Music Dashboard</h1>
+            <div class="button-container">
+                <form action="/search" method="get"><button type="submit">Search</button></form>
+                <form action="/songs_extract" method="get"><button type="submit">Go to songs extract</button></form>
+                <form action="/songs" method="get"><button type="submit">List all songs</button></form>
+                <form action="/pie" method="get"><button type="submit">Genre Analysis</button></form>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

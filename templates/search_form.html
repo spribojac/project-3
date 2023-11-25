@@ -1,0 +1,80 @@
+<!-- search_form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="static/css/main.css">
+    <title>Search Form</title>
+</head>
+<body>
+    <h1>Search for a Track</h1>
+    <form id="searchForm">
+        <label for="searchQuery">Track Name or Artist:</label>
+        <input type="text" id="searchQuery" name="search_query" required>
+        <button type="button" onclick="search()">Search</button>
+    </form>
+
+    <div id="searchResultsContainer"></div>
+
+    <script>
+        function search(page = 1) {
+            const searchQuery = document.getElementById('searchQuery').value;
+
+            // Make a POST request to the server
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `search_query=${encodeURIComponent(searchQuery)}&page=${page}`,
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the JSON data and update the page
+                const resultsContainer = document.getElementById('searchResultsContainer');
+
+                if ('error' in data) {
+                    // No matching songs found
+                    resultsContainer.innerHTML = '<p>No results found.</p>';
+                } else {
+                    // Display the matching songs and pagination controls
+                    resultsContainer.innerHTML = '<h2>Search Results</h2>';
+                    
+                    // Iterate through the results and display each song
+                    data.results.forEach(song => {
+                        resultsContainer.innerHTML += `
+                            <p><strong>Track Name:</strong> ${song.track_name}</p>
+                            <p><strong>Artist:</strong> ${song.artist}</p>
+                            <p><strong>Popularity:</strong> ${song.popularity}</p>
+                            <hr>
+                        `;
+                    });
+
+                    // Display pagination controls
+                    const totalPages = Math.ceil(data.total_results / data.per_page);
+                    resultsContainer.innerHTML += `
+                        <div>
+                            <button onclick="search(${Math.max(data.current_page - 1, 1)})">Previous</button>
+                            Page ${data.current_page} of ${totalPages}
+                            <button onclick="search(${Math.min(data.current_page + 1, totalPages)})">Next</button>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching search results:', error);
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
