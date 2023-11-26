@@ -40,7 +40,9 @@ class SpotifySongs(Base):
     valence = Column(Float)
     tempo = Column(Float)
     duration_ms = Column(Integer)
+    duration_seconds = Column(Integer)
     duration_minutes_seconds = Column(Float)  
+    
 
 #################################################
 # Flask Setup
@@ -54,8 +56,9 @@ app = Flask(__name__)
 
 @app.route("/")
 def welcome():
-   return render_template("index.html")
 
+    return render_template("index.html")
+    
 @app.route("/pie")
 def pie():
     return render_template("pie.html")
@@ -76,50 +79,51 @@ def top_100():
 def song_length():
     return render_template("song_length.html")
 
-#@app.route("/songs_extract") # remove as route maybe?
-#def extract():
+@app.route("/songs_extract") # remove as route maybe?
+def extract():
     # Create our session (link) from Python to the DB
-    #session = Session(engine)
+    session = Session(engine)
     
-    #results = session.query(SpotifySongs).all()
+    results = session.query(SpotifySongs).all()
 
-    #session.close()
+    session.close()
 
-    #all_songs = [{"track_name": track[0]} for track in results]
+    all_songs = [{"track_name": track[0]} for track in results]
 
-    #all_songs = []
-    #for song in results:
-        #spotify_dict = {
-        #"track_id": song.track_id,
-        #"track_name": song.track_name,
-        #"artist": song.artist,
-        #"popularity": song.popularity,
-        #"album_id": song.album_id,
-        #"album_release_date": song.album_release_date,
-        #"playlist_name": song.playlist_name,
-        #"playlist_id": song.playlist_id,
-        #"playlist_genre": song.playlist_genre,
-        #"playlist_subgenre": song.playlist_subgenre,
-        #"danceability": song.danceability,
-        #"energy": song.energy,
-        #"key": song.key,
-        #"loudness": song.loudness,
-        #"mode": song.mode,
-        #"speechiness": song.speechiness,
-        #"acousticness": song.acousticness,
-        #"instrumentalness": song.instrumentalness,
-        #"liveness": song.liveness,
-        #"valence": song.valence,
-        #"tempo": song.tempo,
-        #"duration_ms": song.duration_ms,
-        #"duration_minutes_seconds": song.duration_minutes_seconds,
-        #}
-        #all_songs.append(spotify_dict)
+    all_songs = []
+    for song in results:
+        spotify_dict = {
+        "track_id": song.track_id,
+        "track_name": song.track_name,
+        "artist": song.artist,
+        "popularity": song.popularity,
+        "album_id": song.album_id,
+        "album_release_date": song.album_release_date,
+        "playlist_name": song.playlist_name,
+        "playlist_id": song.playlist_id,
+        "playlist_genre": song.playlist_genre,
+        "playlist_subgenre": song.playlist_subgenre,
+        "danceability": song.danceability,
+        "energy": song.energy,
+        "key": song.key,
+        "loudness": song.loudness,
+        "mode": song.mode,
+        "speechiness": song.speechiness,
+        "acousticness": song.acousticness,
+        "instrumentalness": song.instrumentalness,
+        "liveness": song.liveness,
+        "valence": song.valence,
+        "tempo": song.tempo,
+        "duration_ms": song.duration_ms,
+        "duration_seconds": song.duration_seconds,
+        "duration_minutes_seconds": song.duration_minutes_seconds,
+        }
+        all_songs.append(spotify_dict)
 
-    #with open('static/spotify_songs.json', 'w') as file2:
-        #json.dump(all_songs, file2)
+    with open('static/spotify_songs.json', 'w') as file2:
+        json.dump(all_songs, file2)
 
-    #return render_template('songs_extract.html')
+    return render_template('songs_extract.html')
 
 @app.route("/songs")
 def songs():
