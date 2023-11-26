@@ -38,8 +38,10 @@
             const maxDuration = d3.max(duration);
 
             const plot = Plot.plot({
+                inset: 10,
+                grid: true,
                 marks: [
-                    Plot.lineY(data, { x: releaseDate, y: duration })
+                    Plot.lineY(data, { x: releaseDate, y: duration})
                 ],
                 x: {
                     label: 'year',
@@ -47,8 +49,6 @@
                 },
                 y: { 
                     label: 'duration',
-                    domain: [0, maxDuration], // Set the y-axis domain explicitly
-                    tickValues: d3.range(0, maxDuration + 1, 1)
                 },
             });
 
