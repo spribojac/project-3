@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="static/css/main.css">
+    <title>Top Songs Chart</title>
+    <!-- Add the Plotly library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+
+    <!-- Add input and button for user selection -->
+    <label for="songCount">Select number of songs:</label>
+    <input type="number" id="songCount" min="1" max="100" value="20">
+    <button onclick="updateChart()">Update Chart</button>
+
+    <!-- Add a div to render the chart -->
+    <div id="chartDiv" style="height: 800px;"></div>
+
+    <script>
+        // Fetch data from the Spotify songs JSON file
+        fetch('static/spotify_songs.json')
+            .then(response => response.json())
+            .then(data => {
+                // Store the data in a global variable for later use
+                window.songData = data;
+
+                // Initial chart update
+                updateChart();
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+        // Variable to store the chart instance
+        let chart;
+
+        function updateChart() {
+            // Assume 'songData' is an array of objects representing the Spotify songs
+            const songCount = document.getElementById('songCount').value;
+
+            // Sort the data by popularity in descending order
+            const sortedData = window.songData.sort((a, b) => b.popularity - a.popularity);
+
+            // Take the specified number of songs
+            const selectedData = sortedData.slice(0, songCount);
+
+            // Extract the track names and popularity scores
+            const trackNames = selectedData.map(song => song.track_name);
+            const artists = selectedData.map(song => song.artist);
+            const popularityScores = selectedData.map(song => song.popularity);
+
+            // Remove the existing chart if it exists
+            if (chart) {
+                Plotly.purge('chartDiv');
+            }
+            // Create a horizontal bar chart
+            const trace = {
+                x: popularityScores,
+                y: trackNames,
+                text: artists, // Use artists for hover text
+                type: 'bar',
+                orientation: 'h',
+                marker: {
+                    color: 'rgba(50,171,96,0.6)',
+                    line: {
+                        color: 'rgba(50,171,96,1)',
+                        width: 1
+                    }
+                }
+            };
+
+            const layout = {
+                title: `Top ${songCount} Most Popular Songs`,
+                xaxis: {
+                    title: 'Popularity'
+                },
+                yaxis: {
+                    title: 'Songs',
+                    automargin: true // Automatically adjust margin to fit tick labels
+                },
+                height: 800 // Set the height of the chart
+            };
+
+            // Create a new chart and store its instance
+            chart = Plotly.newPlot('chartDiv', [trace], layout);
+        }
+
+        // Initial chart update
+        updateChart();
+        
+    </script>
+
+</body>
+</html>

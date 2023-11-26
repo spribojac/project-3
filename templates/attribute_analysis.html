@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="static/css/main.css">
+    <title>Attribute Correlation Explorer</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Discovery the Relationship Between Musical Attributes</h1>
+    <p>Choose your attributes and dive into the heart of musical correlations. Unravel the connections between all these characteristics in the top 100 songs! </p>
+
+    <!-- Add dropdowns for attribute selection -->
+    <label for="xAttribute">Select X Attribute:</label>
+    <select id="xAttribute">
+        <option value="danceability">Danceability</option>
+        <option value="energy">Energy</option>
+        <option value="tempo">Tempo</option>
+        <option value="loudness">Loudness</option>
+        <option value="speechiness">Speechiness</option>
+        <option value="acousticness">Acousticness</option>
+        <option value="instrumentalness">Instrumentalness</option>
+        <option value="liveness">Liveness</option>
+        <option value="valence">Valence</option>
+        <!-- Add more attributes as needed -->
+    </select>
+
+    <label for="yAttribute">Select Y Attribute:</label>
+    <select id="yAttribute">
+        <option value="danceability">Danceability</option>
+        <option value="energy">Energy</option>
+        <option value="tempo">Tempo</option>
+        <option value="loudness">Loudness</option>
+        <option value="speechiness">Speechiness</option>
+        <option value="acousticness">Acousticness</option>
+        <option value="instrumentalness">Instrumentalness</option>
+        <option value="liveness">Liveness</option>
+        <option value="valence">Valence</option>
+    </select>
+
+    <button onclick="updateChart()">Update Chart</button>
+
+    <!-- Add a div to render the chart -->
+    <div id="chartDiv" style="height: 400px;"></div>
+
+    <script>
+        let songData;
+
+        // Fetch data from the Spotify songs JSON file
+        fetch('static/spotify_songs.json')
+            .then(response => response.json())
+            .then(data => {
+                // Store the data in the 'songData' variable
+                songData = data;
+
+                // Initial chart update
+                updateChart();
+            })
+            .catch(error => console.error('Error fetching data:', error));
+
+        function updateChart() {
+            // Get selected attributes from dropdowns
+            const xAttribute = document.getElementById('xAttribute').value;
+            const yAttribute = document.getElementById('yAttribute').value;
+
+            // Extract attribute values for the top 100 songs
+            const topSongs = songData.slice(0, 100);
+            const xValues = topSongs.map(song => song[xAttribute]);
+            const yValues = topSongs.map(song => song[yAttribute]);
+            const labels = topSongs.map(song => `${song.track_name} - ${song.artist}`);
+
+
+            // Create a scatter plot
+            const trace = {
+                x: xValues,
+                y: yValues,
+                mode: 'markers',
+                type: 'scatter',
+                marker: { size: 10 },
+                text: labels
+            };
+
+            const layout = {
+                title: `Top 100 Songs - ${xAttribute} vs ${yAttribute}`,
+                xaxis: { title: xAttribute },
+                yaxis: { title: yAttribute },
+            };
+
+            // Plot the chart to the div with ID 'chartDiv'
+            Plotly.newPlot('chartDiv', [trace], layout);
+        }
+
+        // Initial chart update
+        updateChart();
+    </script>
+
+</body>
+</html>

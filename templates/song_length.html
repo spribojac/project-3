@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6"></script>
+</head>
+<body>
+    <div id="myplot"></div>
+    <script type="module"> 
+
+        d3.json("/static/spotify_songs.json").then((data) => {
+
+            data.forEach(entry => {
+                entry.album_release_date = new Date(entry.album_release_date);
+            });
+
+            // Extract the year from the date
+            const extractYear = (date) => new Date(date).getFullYear();
+
+            const groupedData = d3.group(data, entry => extractYear(entry.album_release_date));
+
+            // Convert the Map back to an array of objects
+            const groupedArray = Array.from(groupedData, ([year, entries]) => ({
+                album_release_date: year,
+                // Calculate aggregate duration or other metrics if needed
+                duration: d3.mean(entries, entry => entry.duration_seconds),
+            }));
+
+            // Sort the array by album_release_year in ascending order
+            groupedArray.sort((a, b) => a.album_release_date - b.album_release_date);
+
+            const releaseDate = groupedArray.map(entry => entry.album_release_date);
+            const duration = groupedArray.map(entry => entry.duration);
+
+            const maxDuration = d3.max(duration);
+
+            const plot = Plot.plot({
+                marks: [
+                    Plot.lineY(data, { x: releaseDate, y: duration })
+                ],
+                x: {
+                    label: 'year',
+                    tickFormat: d3.format('d') // Use 'd' format to remove commas
+                },
+                y: { 
+                    label: 'duration',
+                    domain: [0, maxDuration], // Set the y-axis domain explicitly
+                    tickValues: d3.range(0, maxDuration + 1, 1)
+                },
+            });
+
+            const div = document.querySelector("#myplot");
+            div.append(plot);
+
+        });
+
+    </script>
+</body>
+</html>

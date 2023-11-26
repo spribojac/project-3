@@ -4,16 +4,23 @@ body {
     padding: 0;
 }
 
-.container {
+.container, #infoContainer {
     max-width: 5000px;
     padding: 40px;
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
     text-align: center;
-    color: #fff;
+    color: #3498db;
     position: absolute;
-    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
+}
+
+#infoContainer {
+    top: 40%;
+}
+
+.info-container strong {
+    font-weight: bold;
 }
 
 h1 {
@@ -47,6 +54,5 @@ button:hover {
 }
 
 .button-container button {
-    margin: 0 20px; /* Adjust the margin value to increase or decrease spacing */
+    margin: 0 20px;
 }
-

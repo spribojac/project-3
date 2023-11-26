@@ -14,13 +14,41 @@
             <h1>Interactive Music Dashboard</h1>
             <div class="button-container">
                 <form action="/search" method="get"><button type="submit">Search</button></form>
-                <form action="/songs_extract" method="get"><button type="submit">Go to songs extract</button></form>
                 <form action="/songs" method="get"><button type="submit">List all songs</button></form>
-                <form action="/pie" method="get"><button type="submit">Genre Analysis</button></form>
-                <form action="/bar" method="get"><button type="submit">Playlist Analysis</button></form>
+                <form action="/pie" method="get"><button type="submit">Playlist Genre Explorer</button></form>
+                <form action="/bar" method="get"><button type="submit">Playlist Attribute Explorer</button></form>
+                <form action="/top_100" method="get"><button type="submit">Top 100</button></form>
+                <form action="/song_length" method="get"><button type="submit">Song Length Over The Years</button></form>
+                <form action="/attribute_analysis" method="get"><button type="submit">Attribute Corellation Explorer</button></form>
+                
             </div>
         </div>
     </div>
+
+    <div class="info-container">
+        <div class="container" id="infoContainer">
+        <p><strong>Total Songs:</strong> <span id="totalSongs"></span></p>
+        <p><strong>Unique Artists:</strong> <span id="uniqueArtists"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Fetch data from the Spotify songs JSON file
+        fetch('static/spotify_songs.json')
+            .then(response => response.json())
+            .then(data => {
+                // Calculate total number of songs
+                const totalSongs = data.length;
+
+                // Calculate total number of unique artists
+                const uniqueArtists = new Set(data.map(song => song.artist)).size;
+
+                // Update HTML content
+                document.getElementById('totalSongs').textContent = `${totalSongs}`;
+                document.getElementById('uniqueArtists').textContent = `${uniqueArtists}`;
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
 
 </body>
 </html>
