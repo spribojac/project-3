@@ -36,7 +36,7 @@
         let chart;
 
         function updateChart() {
-            // Assume 'songData' is an array of objects representing the Spotify songs
+            // Create array of objects representing the Spotify songs
             const songCount = document.getElementById('songCount').value;
 
             // Sort the data by popularity in descending order
@@ -50,7 +50,7 @@
             const artists = selectedData.map(song => song.artist);
             const popularityScores = selectedData.map(song => song.popularity);
 
-            // Remove the existing chart if it exists
+            // Remove the existing chart if it exists (allow to refresh 'dynamically')
             if (chart) {
                 Plotly.purge('chartDiv');
             }
@@ -58,7 +58,7 @@
             const trace = {
                 x: popularityScores,
                 y: trackNames,
-                text: artists, // Use artists for hover text
+                text: artists,
                 type: 'bar',
                 orientation: 'h',
                 marker: {
@@ -69,7 +69,7 @@
                     }
                 }
             };
-
+            // Styling of the chart
             const layout = {
                 title: `Top ${songCount} Most Popular Songs`,
                 xaxis: {
@@ -77,10 +77,9 @@
                 },
                 yaxis: {
                     title: 'Songs',
-                    automargin: true // Automatically adjust margin to fit tick labels
+                    automargin: true
                 },
-                height: 800 // Set the height of the chart
-            };
+                height: 800
 
             // Create a new chart and store its instance
             chart = Plotly.newPlot('chartDiv', [trace], layout);

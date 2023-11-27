@@ -54,31 +54,38 @@ app = Flask(__name__)
 # Flask Routes
 #################################################
 
+# Welcome page
 @app.route("/")
 def welcome():
 
     return render_template("index.html")
-    
+
+# Playlist Genre Analysis Page
 @app.route("/pie")
 def pie():
     return render_template("pie.html")
 
+# Playlist Attributes Correlation Page
 @app.route("/attribute_analysis")
 def attribute_analysis():
     return render_template("attribute_analysis.html")
 
+# Playlist Attribute Analysis Page
 @app.route("/bar")
 def bar():
     return render_template("bar_chart.html")
 
+# Top 100 Songs page
 @app.route("/top_100")
 def top_100():
     return render_template("top_100.html")
 
+# Song Length over the Years page
 @app.route("/song_length")
 def song_length():
     return render_template("song_length.html")
 
+# Song JSON
 @app.route("/songs_extract") # remove as route maybe?
 def extract():
     # Create our session (link) from Python to the DB
@@ -125,6 +132,7 @@ def extract():
 
     return render_template('songs_extract.html')
 
+# Tracks JSON
 @app.route("/songs")
 def songs():
 
@@ -139,15 +147,12 @@ def songs():
 
     return jsonify(all_songs)
 
-# Function to get paginated results
-def get_paginated_results(query, page=1, per_page=25):
-    offset = (page - 1) * per_page
-    return query.offset(offset).limit(per_page).all()
-
+# Search Function
 @app.route('/search', methods=['GET'])
 def search_form():
     return render_template('search_form.html')
 
+# Extended Search Function
 @app.route('/search', methods=['POST'])
 def search():
     session = Session(engine)
@@ -185,6 +190,11 @@ def search():
 
     # Return a JSON indicating that no matching songs were found
     return jsonify({"error": "No matching songs found"})
+
+# Function to get paginated results in search function
+def get_paginated_results(query, page=1, per_page=25):
+    offset = (page - 1) * per_page
+    return query.offset(offset).limit(per_page).all()
 
 if __name__ == '__main__':
     app.run(debug=True)

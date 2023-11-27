@@ -1,39 +1,58 @@
 <!-- search_form.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta tags and stylesheet link -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="static/css/main.css">
+    <!-- Title for the HTML page -->
     <title>Search Form</title>
 </head>
 <body>
+    <!-- Heading for the search form -->
     <h1>Search for a Track</h1>
+
+    <!-- Search form -->
     <form id="searchForm">
+        <!-- Label and input field for the search query -->
         <label for="searchQuery">Track Name or Artist:</label>
         <input type="text" id="searchQuery" name="search_query" required>
+        <!-- Button to trigger the search function -->
         <button type="button" onclick="search()">Search</button>
     </form>
 
+    <!-- Container for displaying search results -->
     <div id="searchResultsContainer"></div>
 
+    <!-- JavaScript script embedded in the HTML -->
     <script>
+        // JavaScript code for search functionality
+
+        // Function called when the "Search" button is clicked, with an optional page parameter (defaulting to 1)
         function search(page = 1) {
+            // Get the search query from the input field
             const searchQuery = document.getElementById('searchQuery').value;
 
             // Make a POST request to the server
             fetch('/search', {
+                // Specify that it's a POST request
                 method: 'POST',
+                // Set the Content-Type header to indicate form-urlencoded data
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
+                // Encode the search query and page number in the request body
                 body: `search_query=${encodeURIComponent(searchQuery)}&page=${page}`,
             })
+            // Handle the response as JSON
             .then(response => response.json())
             .then(data => {
                 // Handle the JSON data and update the page
                 const resultsContainer = document.getElementById('searchResultsContainer');
 
+                // Check if the response contains an error
                 if ('error' in data) {
                     // No matching songs found
                     resultsContainer.innerHTML = '<p>No results found.</p>';
@@ -62,6 +81,7 @@
                     `;
                 }
             })
+            // Handle errors during the fetch operation
             .catch(error => {
                 console.error('Error fetching search results:', error);
             });
@@ -69,6 +89,7 @@
     </script>
 </body>
 </html>
+
 
 
 
