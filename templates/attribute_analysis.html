@@ -8,7 +8,7 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-    <h1>Discovery the Relationship Between Musical Attributes</h1>
+    <h1>Discover the Relationship Between Musical Attributes</h1>
     <p>Choose your attributes and dive into the heart of musical correlations. Unravel the connections between all these characteristics in the top 100 songs! </p>
 
     <!-- Add dropdowns for attribute selection -->
@@ -42,7 +42,7 @@
     <button onclick="updateChart()">Update Chart</button>
 
     <!-- Add a div to render the chart -->
-    <div id="chartDiv" style="height: 400px;"></div>
+    <div id="chartDiv" style="width: 1000px; height: 1000px;"></div>
 
     <script>
         let songData;
@@ -70,7 +70,6 @@
             const yValues = topSongs.map(song => song[yAttribute]);
             const labels = topSongs.map(song => `${song.track_name} - ${song.artist}`);
 
-
             // Create a scatter plot
             const trace = {
                 x: xValues,
@@ -97,3 +96,8 @@
 
 </body>
 </html>
+
+
+
+
+
