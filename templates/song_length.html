@@ -18,14 +18,14 @@
             });
 
             // Extract the year from the date
-            const extractYear = (date) => new Date(date).getFullYear();
+            const extractYear = (date) => date.getFullYear();
 
             const groupedData = d3.group(data, entry => extractYear(entry.album_release_date));
 
             // Convert the Map back to an array of objects
             const groupedArray = Array.from(groupedData, ([year, entries]) => ({
                 album_release_date: year,
-                // Calculate aggregate duration or other metrics if needed
+                // Calculate aggregate duration 
                 duration: d3.mean(entries, entry => entry.duration_seconds),
             }));
 
