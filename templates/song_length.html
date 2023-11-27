@@ -13,6 +13,8 @@
 
         d3.json("/static/spotify_songs.json").then((data) => {
 
+            // Use a forEach loop to convert date to date format
+
             data.forEach(entry => {
                 entry.album_release_date = new Date(entry.album_release_date);
             });
@@ -32,10 +34,12 @@
             // Sort the array by album_release_year in ascending order
             groupedArray.sort((a, b) => a.album_release_date - b.album_release_date);
 
+            // Extract releaseDate and duration from the array before plotting
+
             const releaseDate = groupedArray.map(entry => entry.album_release_date);
             const duration = groupedArray.map(entry => entry.duration);
 
-            const maxDuration = d3.max(duration);
+            // Observable Plot code
 
             const plot = Plot.plot({
                 inset: 10,
@@ -51,6 +55,8 @@
                     label: 'duration',
                 },
             });
+
+            // Append the above plot to the HTML #myplot element assigned to the div variable
 
             const div = document.querySelector("#myplot");
             div.append(plot);
